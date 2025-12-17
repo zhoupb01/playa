@@ -1,16 +1,31 @@
-# 视频流服务器
+# Playa
 
-基于 FastAPI 和 FFmpeg NVENC 的局域网视频流服务，支持 GPU 硬件加速转码，iPad 等设备在线播放。
+简洁实用的局域网视频流服务器，基于 FastAPI 和 FFmpeg NVENC GPU 硬件加速转码，支持 iPad 等设备在线播放。
 
 ## 功能特性
 
+### 后端功能
 - 递归扫描子目录中的视频文件
 - GPU 硬件加速转码（NVIDIA NVENC）
 - HLS 流媒体协议，支持各种设备播放
-- 简洁的网页播放器界面
 - 自动转码缓存机制
-- 视频搜索功能
 - 仅局域网访问
+
+### 前端功能
+- 简洁的网页播放器界面
+- 视频搜索和过滤
+- 播放进度自动记录和恢复（刷新页面继续上次位置）
+- 播放历史记录标记（已播放视频带小圆点）
+- 播放器快捷键支持：
+  - 空格：播放/暂停
+  - ← / →：后退/前进 5 秒
+  - ↑ / ↓：音量增加/减少 10%
+  - F：全屏切换
+  - M：静音切换
+  - 0-9：跳转到 0%-90% 位置
+  - ESC：退出全屏/取消拖拽
+- 侧边栏可拖拽调整宽度（支持记忆）
+- 模块化 JavaScript 架构，代码清晰易维护
 
 ## 系统要求
 
@@ -35,11 +50,17 @@ pip install -r requirements.txt
 
 ### 3. 配置环境变量
 
+复制 `.env.example` 并创建 `.env` 文件：
+
+```bash
+cp .env.example .env
+```
+
 编辑 `.env` 文件，根据需要修改配置：
 
 ```env
-VIDEO_ROOT=/home/zhoupb/projects/video-server
-CACHE_DIR=/home/zhoupb/projects/video-server/cache
+VIDEO_ROOT=/path/to/your/videos
+CACHE_DIR=/path/to/cache  # 可选，默认为 VIDEO_ROOT/.cache
 SERVER_HOST=0.0.0.0
 SERVER_PORT=8000
 ```
@@ -92,26 +113,36 @@ http://192.168.1.100:8000
 
 ### 3. 播放视频
 
-- 从左侧列表选择视频
+- 从左侧列表选择视频（带圆点的表示已播放过）
 - 点击视频名称开始播放
 - 首次播放会自动转码（可能需要等待几秒）
 - 转码完成的视频会立即播放
+- 播放进度自动保存，下次打开从上次位置继续
+- 使用快捷键控制播放（见功能特性部分）
+- 可拖拽侧边栏右边缘调整宽度
 
 ## 目录结构
 
 ```
 video-server/
-├── app.py                # FastAPI 主应用
-├── config.py             # 配置管理
-├── video_scanner.py      # 视频扫描模块
-├── transcoder.py         # GPU 转码模块
-├── requirements.txt      # Python 依赖
-├── .env                  # 环境配置
-├── static/               # 静态资源
-│   ├── index.html        # 播放器页面
-│   └── style.css         # 样式文件
-├── cache/                # HLS 切片缓存（自动生成）
-└── README.md             # 使用说明
+├── app.py                      # FastAPI 主应用
+├── config.py                   # 配置管理
+├── video_scanner.py            # 视频扫描模块
+├── transcoder.py               # GPU 转码模块
+├── requirements.txt            # Python 依赖
+├── .env.example                # 环境配置示例
+├── .env                        # 环境配置（需自行创建）
+├── static/                     # 静态资源
+│   ├── index.html              # 播放器页面
+│   ├── style.css               # 样式文件
+│   └── js/                     # JavaScript 模块
+│       ├── video-list.js       # 视频列表管理
+│       ├── video-player.js     # 播放器核心
+│       ├── progress-tracker.js # 播放进度跟踪
+│       ├── keyboard-shortcuts.js # 快捷键支持
+│       └── sidebar-resizer.js  # 侧边栏拖拽
+├── cache/                      # HLS 切片缓存（自动生成）
+└── README.md                   # 使用说明
 ```
 
 ## API 端点
@@ -193,11 +224,30 @@ ffmpeg -hwaccels
 - 确认服务器和设备在同一局域网
 - 使用 `ifconfig` 或 `ip addr` 确认服务器 IP
 
+## 高级功能
+
+### 清除播放历史
+
+在浏览器控制台执行：
+
+```javascript
+VideoApp.PlayHistory.clearPlayHistory()
+```
+
+### 清除某个视频的播放进度
+
+在浏览器控制台执行：
+
+```javascript
+localStorage.removeItem('video_id')  // 替换 video_id 为实际的视频ID
+```
+
 ## 性能优化建议
 
 1. **RTX 5080 性能充足**：可以将 preset 改为 `p6` 或 `p7` 以获得更好的画质
 2. **清理缓存**：定期删除 `cache/` 目录下的旧文件
 3. **预转码**：提前转码常看的视频，避免首次播放等待
+4. **侧边栏宽度**：根据视频名称长度调整侧边栏宽度，设置会自动保存
 
 ## 许可证
 
