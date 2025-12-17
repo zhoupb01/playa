@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频服务器</title>
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=2.0">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>视频列表</h2>
+                <button onclick="rescanVideos()" class="rescan-btn">重新扫描</button>
+            </div>
+            <input type="text" id="search" placeholder="搜索视频..." class="search-input">
+            <div id="video-count" class="video-count"></div>
+            <ul id="video-list" class="video-list"></ul>
+            <div id="sidebar-resizer" class="sidebar-resizer" role="separator" aria-orientation="vertical" aria-label="调整侧边栏宽度" tabindex="-1"></div>
+        </aside>
+
+        <main class="player-area">
+            <div id="welcome" class="welcome">
+                <h1>欢迎使用视频服务器</h1>
+                <p>从左侧列表选择视频开始播放</p>
+            </div>
+            <div id="player-container" class="player-container" style="display: none;">
+                <div class="video-wrapper">
+                    <video id="player" class="video-js vjs-big-play-centered" controls preload="auto"></video>
+                </div>
+                <div id="info" class="info-panel"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="/static/js/progress-tracker.js"></script>
+    <script src="/static/js/video-player.js"></script>
+    <script src="/static/js/keyboard-shortcuts.js"></script>
+    <script src="/static/js/sidebar-resizer.js"></script>
+    <script src="/static/js/video-list.js"></script>
+</body>
+</html>
