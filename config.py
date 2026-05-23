@@ -19,7 +19,7 @@ VIDEO_EXTENSIONS = {'.mkv', '.mp4', '.avi', '.mov', '.flv', '.wmv', '.m4v', '.we
 
 # NVENC转码参数
 TRANSCODE_CONFIG = {
-    "preset": "p4",           # NVENC预设：p1(快)到p7(慢但质量好)
+    "preset": "p7",           # NVENC预设：p1(快)到p7(慢但质量好)
     "tune": "hq",             # 高质量调优
     "rc": "vbr",              # 可变码率
     "video_bitrate": "5M",    # 视频码率

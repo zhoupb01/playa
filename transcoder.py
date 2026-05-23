@@ -73,10 +73,14 @@ class TranscodeManager:
                 '-maxrate', TRANSCODE_CONFIG['max_bitrate'],
                 '-bufsize', TRANSCODE_CONFIG['bufsize'],
                 '-c:a', 'aac',
+                '-profile:a', 'aac_low',
+                '-ac', '2',
+                '-ar', '48000',
                 '-b:a', TRANSCODE_CONFIG['audio_bitrate'],
                 '-f', 'hls',
                 '-hls_time', TRANSCODE_CONFIG['hls_time'],
                 '-hls_list_size', '0',
+                '-hls_playlist_type', 'event',
                 '-hls_segment_filename', segment_pattern,
                 playlist_path
             ]
